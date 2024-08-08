@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/acitivities")
+@RequestMapping("/api/activities")
 public class ActivityController {
 
     @Autowired
@@ -26,5 +26,4 @@ public class ActivityController {
     public Activity getActivity(@PathVariable Long id) {
         return acitivityService.findById(id);
     }
-
 }

@@ -1,5 +1,6 @@
 package com.sgiep.sgiep_back.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.DayOfWeek;
@@ -19,6 +20,7 @@ public class Schedule {
 
     @ManyToOne
     @JoinColumn(name = "activity_id", nullable = false)
+    @JsonBackReference
     private Activity activity;
 
     //Getters and Setters

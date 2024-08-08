@@ -1,5 +1,6 @@
 package com.sgiep.sgiep_back.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sgiep.sgiep_back.model.Schedule;
 import jakarta.persistence.*;
 
@@ -18,6 +19,7 @@ public class Activity {
     private String location;
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Schedule> schedules;
 
     // Getters and Setters
