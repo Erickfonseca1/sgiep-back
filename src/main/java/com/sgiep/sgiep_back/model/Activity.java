@@ -1,5 +1,7 @@
 package com.sgiep.sgiep_back.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sgiep.sgiep_back.model.Schedule;
 import jakarta.persistence.*;
@@ -21,6 +23,20 @@ public class Activity {
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Schedule> schedules;
+
+    @ManyToOne
+    @JoinColumn(name = "professor_id")
+    @JsonIgnoreProperties("activities")
+    private Professor professor;
+
+    @ManyToMany
+    @JoinTable(
+            name = "activity_student",
+            joinColumns = @JoinColumn(name = "activity_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    @JsonIgnoreProperties("activities")
+    private List<Citizen> students;
 
     // Getters and Setters
 
@@ -63,5 +79,21 @@ public class Activity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+
+    public List<Citizen> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Citizen> students) {
+        this.students = students;
     }
 }
