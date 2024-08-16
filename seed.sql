@@ -23,8 +23,8 @@ INSERT INTO citizens (id) VALUES
 
 -- Criação de atividades
 INSERT INTO activities (name, description, location, professor_id) VALUES
-                                                                       ('Natação', 'Aulas de natação', 'Piscina Municipal', 1), -- Professor responsável: Prof. Carlos
-                                                                       ('Futebol', 'Aulas de futebol', 'Campo Municipal', 2);  -- Professor responsável: Prof. Maria
+('Natação', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et orci sed orci porta condimentum ac eu turpis. Morbi nibh sem, gravida imperdiet massa id, egestas dictum nunc. Nulla vestibulum molestie cursus. Phasellus semper lorem at tellus tincidunt mattis. Integer quis porttitor lorem. Morbi nec mi mattis, egestas diam nec, ullamcorper diam. Morbi vel sapien lectus. Praesent placerat viverra luctus. Aliquam lectus neque, vestibulum non mi eu, efficitur pulvinar urna. Vestibulum eget lectus dignissim, tempus dui sed, gravida enim.', 'Piscina Municipal', 1), -- Professor responsável: Prof. Carlos
+('Futebol', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et orci sed orci porta condimentum ac eu turpis. Morbi nibh sem, gravida imperdiet massa id, egestas dictum nunc. Nulla vestibulum molestie cursus. Phasellus semper lorem at tellus tincidunt mattis. Integer quis porttitor lorem. Morbi nec mi mattis, egestas diam nec, ullamcorper diam. Morbi vel sapien lectus. Praesent placerat viverra luctus. Aliquam lectus neque, vestibulum non mi eu, efficitur pulvinar urna. Vestibulum eget lectus dignissim, tempus dui sed, gravida enim.', 'Campo Municipal', 2);  -- Professor responsável: Prof. Maria
 
 -- Criação de horários (schedules) para Natação
 INSERT INTO schedules (day_of_week, start_time, end_time, activity_id) VALUES

@@ -17,6 +17,8 @@ public class Activity {
     private Long id;
 
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String location;
 
