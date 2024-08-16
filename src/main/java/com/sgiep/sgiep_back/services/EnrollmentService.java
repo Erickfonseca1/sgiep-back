@@ -37,11 +37,12 @@ public class EnrollmentService {
         if (activity == null || citizen == null) {
             return false;
         }
-
-        if (!activity.getStudents().contains(citizen)) {
-            activity.getStudents().add(citizen);
-            activityRepository.save(activity);
+        if (activity.getStudents().contains(citizen)) {
+            return false;
         }
+
+        activity.getStudents().add(citizen);
+        activityRepository.save(activity);
 
         return true;
     }

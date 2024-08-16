@@ -3,15 +3,13 @@ package com.sgiep.sgiep_back.controller;
 import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.services.AcitivityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/activities")
+@CrossOrigin(origins = "${cors.allowedOrigins}")
 public class ActivityController {
 
     @Autowired
