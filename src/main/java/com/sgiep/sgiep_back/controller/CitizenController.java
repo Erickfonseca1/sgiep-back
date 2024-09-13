@@ -1,10 +1,6 @@
 package com.sgiep.sgiep_back.controller;
 
-import com.sgiep.sgiep_back.model.Citizen;
-import com.sgiep.sgiep_back.model.Professor;
 import com.sgiep.sgiep_back.model.User;
-import com.sgiep.sgiep_back.services.CitizenService;
-import com.sgiep.sgiep_back.services.ProfessorService;
 import com.sgiep.sgiep_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

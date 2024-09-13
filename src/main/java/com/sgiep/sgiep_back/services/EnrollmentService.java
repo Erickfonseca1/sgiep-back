@@ -1,11 +1,11 @@
 package com.sgiep.sgiep_back.services;
 
 import com.sgiep.sgiep_back.model.Activity;
-import com.sgiep.sgiep_back.model.Citizen;
 import com.sgiep.sgiep_back.model.Enrollment;
+import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.repository.ActivityRepository;
-import com.sgiep.sgiep_back.repository.CitizenRepository;
 import com.sgiep.sgiep_back.repository.EnrollmentRepository;
+import com.sgiep.sgiep_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 public class EnrollmentService {
+
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
@@ -20,7 +21,7 @@ public class EnrollmentService {
     private ActivityRepository activityRepository;
 
     @Autowired
-    private CitizenRepository citizenRepository;
+    private UserRepository userRepository;
 
     public List<Enrollment> findAll() {
         return enrollmentRepository.findAll();
@@ -31,19 +32,19 @@ public class EnrollmentService {
     }
 
     public boolean enrollStudent(Long activityId, Long citizenId) {
-        Activity activity = activityRepository.findById(activityId).orElse(null);
-        Citizen citizen = citizenRepository.findById(citizenId).orElse(null);
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new RuntimeException("Activity not found"));
+        User citizen = userRepository.findById(citizenId).orElseThrow(() -> new RuntimeException("Citizen not found"));
 
-        if (activity == null || citizen == null) {
-            return false;
+        if (!"CITIZEN".equalsIgnoreCase(citizen.getRole())) {
+            throw new RuntimeException("User is not a citizen");
         }
+
         if (activity.getStudents().contains(citizen)) {
-            return false;
+            return false;  // Already enrolled
         }
 
         activity.getStudents().add(citizen);
         activityRepository.save(activity);
-
         return true;
     }
 }

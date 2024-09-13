@@ -20,6 +20,7 @@ public class Activity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
     private String location;
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -28,8 +29,8 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name = "professor_id")
-    @JsonIgnoreProperties("activities")
-    private Professor professor;
+    @JsonIgnoreProperties("activitiesAsProfessor")
+    private User professor;
 
     @ManyToMany
     @JoinTable(
@@ -37,8 +38,8 @@ public class Activity {
             joinColumns = @JoinColumn(name = "activity_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    @JsonIgnoreProperties("activities")
-    private List<Citizen> students;
+    @JsonIgnoreProperties("activitiesAsStudent")
+    private List<User> students;  // Agora é User, e o role será "CITIZEN"
 
     // Getters and Setters
 
@@ -83,19 +84,19 @@ public class Activity {
         this.id = id;
     }
 
-    public Professor getProfessor() {
+    public User getProfessor() {
         return professor;
     }
 
-    public void setProfessor(Professor professor) {
+    public void setProfessor(User professor) {
         this.professor = professor;
     }
 
-    public List<Citizen> getStudents() {
+    public List<User> getStudents() {
         return students;
     }
 
-    public void setStudents(List<Citizen> students) {
+    public void setStudents(List<User> students) {
         this.students = students;
     }
 }

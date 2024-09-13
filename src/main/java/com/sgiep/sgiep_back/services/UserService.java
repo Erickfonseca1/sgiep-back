@@ -1,18 +1,12 @@
 package com.sgiep.sgiep_back.services;
 
 import com.sgiep.sgiep_back.model.Activity;
-import com.sgiep.sgiep_back.model.Citizen;
-import com.sgiep.sgiep_back.model.Professor;
 import com.sgiep.sgiep_back.model.User;
-import com.sgiep.sgiep_back.repository.CitizenRepository;
-import com.sgiep.sgiep_back.repository.ProfessorRepository;
 import com.sgiep.sgiep_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -43,8 +37,13 @@ public class UserService {
     public List<Activity> getActivitiesByUserId(Long id) {
         User user = findById(id);
         if ("PROFESSOR".equalsIgnoreCase(user.getRole())) {
-            return user.getActivities();
+            return user.getActivitiesAsProfessor();
         }
+
+        if ("CITIZEN".equalsIgnoreCase(user.getRole())) {
+            return user.getActivitiesAsStudent();
+        }
+
         throw new RuntimeException("User is not a professor");
     }
 }

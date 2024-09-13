@@ -1,11 +1,11 @@
 package com.sgiep.sgiep_back.controller;
 
 import com.sgiep.sgiep_back.model.Activity;
-import com.sgiep.sgiep_back.model.Citizen;
 import com.sgiep.sgiep_back.model.Enrollment;
+import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.services.AcitivityService;
-import com.sgiep.sgiep_back.services.CitizenService;
 import com.sgiep.sgiep_back.services.EnrollmentService;
+import com.sgiep.sgiep_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +21,10 @@ public class EnrollmentController {
     private EnrollmentService enrollmentService;
 
     @Autowired
-    private AcitivityService acitivityService;
+    private AcitivityService activityService;
 
     @Autowired
-    private CitizenService citizenService;
+    private UserService userService;
 
     @GetMapping
     public List<Enrollment> getAllEnrollments() {
@@ -43,10 +43,10 @@ public class EnrollmentController {
         if (enrolled) {
             return ResponseEntity.ok("Citizen enrolled successfully in the activity");
         } else {
-            Activity activity = acitivityService.findById(activityId);
-            Citizen citizen = citizenService.findById(citizenId);
+            Activity activity = activityService.findById(activityId);
+            User citizen = userService.findById(citizenId);
 
-            if (activity != null && citizen != null && activity.getStudents().contains(citizen)) {
+            if (activity != null && citizen != null && "CITIZEN".equalsIgnoreCase(citizen.getRole()) && activity.getStudents().contains(citizen)) {
                 return ResponseEntity.badRequest().body("Citizen is already enrolled in this activity");
             }
 

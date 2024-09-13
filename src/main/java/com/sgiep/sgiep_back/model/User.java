@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,18 +16,30 @@ public class User {
     private String name;
     private String password;
     private String email;
-    private String role;
+    private String role;  // Ex: "PROFESSOR", "ADMIN", "CITIZEN"
 
     @OneToMany(mappedBy = "professor")
-    @JsonIgnoreProperties("properties")
-    private List<Activity> activities;
+    @JsonIgnoreProperties("professor")
+    private List<Activity> activitiesAsProfessor;
+
+    @ManyToMany(mappedBy = "students")
+    @JsonIgnoreProperties("students")
+    private List<Activity> activitiesAsStudent;
 
     // Getters and Setters
-    public List<Activity> getActivities() {
-        return activities;
+    public List<Activity> getActivitiesAsProfessor() {
+        return activitiesAsProfessor;
     }
 
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
+    public void setActivitiesAsProfessor(List<Activity> activitiesAsProfessor) {
+        this.activitiesAsProfessor = activitiesAsProfessor;
+    }
+
+    public List<Activity> getActivitiesAsStudent() {
+        return activitiesAsStudent;
+    }
+
+    public void setActivitiesAsStudent(List<Activity> activitiesAsStudent) {
+        this.activitiesAsStudent = activitiesAsStudent;
     }
 }

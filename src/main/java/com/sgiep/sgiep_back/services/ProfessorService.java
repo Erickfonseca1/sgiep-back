@@ -1,8 +1,8 @@
 package com.sgiep.sgiep_back.services;
 
 import com.sgiep.sgiep_back.model.Activity;
-import com.sgiep.sgiep_back.model.Professor;
-import com.sgiep.sgiep_back.repository.ProfessorRepository;
+import com.sgiep.sgiep_back.model.User;
+import com.sgiep.sgiep_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,21 +13,24 @@ import java.util.Optional;
 public class ProfessorService {
 
     @Autowired
-    private ProfessorRepository professorRepository;
+    private UserRepository userRepository;
 
-    public Professor findById(Long id) {
-        Optional<Professor> professor = professorRepository.findById(id);
-        return professor.orElse(null);
+    public User findProfessorById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent() && "PROFESSOR".equalsIgnoreCase(user.get().getRole())) {
+            return user.get();
+        }
+        throw new RuntimeException("Professor not found or user is not a professor");
     }
 
-    public List<Professor> getAllProfessors() {
-        return professorRepository.findAll();
+    public List<User> getAllProfessors() {
+        return userRepository.findByRole("PROFESSOR");
     }
 
     public List<Activity> getActivitiesByProfessor(Long professorId) {
-        Professor professor = professorRepository.findById(professorId).orElse(null);
-        if (professor != null ) {
-            return professor.getActivities();
+        User professor = findProfessorById(professorId);
+        if (professor != null) {
+            return professor.getActivitiesAsProfessor();
         }
         return null;
     }
