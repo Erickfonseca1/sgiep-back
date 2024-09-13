@@ -16,39 +16,35 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ProfessorRepository professorRepository;
-
-    @Autowired
-    private CitizenRepository citizenRepository;
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     public User findById(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        return optionalUser.orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User createUser(User user) {
-        User savedUser = userRepository.save(user);
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRole(role);
+    }
 
-        if ("professor".equals(savedUser.getRole())) {
-            Professor professor = new Professor();
-            professor.setId(savedUser.getId());
-            professorRepository.save(professor);
+    public User findProfessorById(Long id) {
+        User professor = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Professor not found"));
+        if (!"PROFESSOR".equalsIgnoreCase(professor.getRole())) {
+            throw new RuntimeException("User is not a professor");
         }
+        return professor;
+    }
 
-        if ("citizen".equals(savedUser.getRole())) {
-            Citizen citizen = new Citizen();
-            citizen.setId(savedUser.getId());
-            citizenRepository.save(citizen);
+    public List<Activity> getActivitiesByUserId(Long id) {
+        User user = findById(id);
+        if ("PROFESSOR".equalsIgnoreCase(user.getRole())) {
+            return user.getActivities();
         }
-
-        return savedUser;
+        throw new RuntimeException("User is not a professor");
     }
 }

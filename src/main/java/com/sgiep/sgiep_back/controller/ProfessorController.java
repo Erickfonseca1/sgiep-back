@@ -2,7 +2,9 @@ package com.sgiep.sgiep_back.controller;
 
 import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.model.Professor;
+import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.services.ProfessorService;
+import com.sgiep.sgiep_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +17,23 @@ import java.util.List;
 public class ProfessorController {
 
     @Autowired
-    private ProfessorService professorService;
+    private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<Professor>> getProfessors() {
-        List<Professor> professors = professorService.getAllProfessors();
+    public ResponseEntity<List<User>> getProfessors() {
+        List<User> professors = userService.getUsersByRole("PROFESSOR");
         return ResponseEntity.ok(professors);
     }
 
     @GetMapping("/{id}")
-    public Professor getProfessor(@PathVariable Long id) {
-        return professorService.findById(id);
+    public ResponseEntity<User> getProfessor(@PathVariable Long id) {
+        User professor = userService.findProfessorById(id);
+        return ResponseEntity.ok(professor);
     }
 
     @GetMapping("/{id}/activities")
     public ResponseEntity<List<Activity>> getProfessorActivities(@PathVariable Long id) {
-        List<Activity> activities = professorService.getActivitiesByProfessor(id);
+        List<Activity> activities = userService.getActivitiesByUserId(id);
         if (activities != null && !activities.isEmpty()) {
             return ResponseEntity.ok(activities);
         } else {
