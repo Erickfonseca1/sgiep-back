@@ -1,43 +1,28 @@
--- Criação de usuários
--- Professores
-INSERT INTO users (name, role) VALUES
-                                   ('Prof. Carlos', 'professor'),
-                                   ('Prof. Maria', 'professor');
+-- Inserir usuários (professores e cidadãos)
+INSERT INTO users (id, name, role, password, email) VALUES
+                                                        (1, 'Prof. Carlos', 'professor', 'professor123', 'carlos@example.com'),
+                                                        (2, 'Prof. Maria', 'professor', 'maria123', 'maria@example.com'),
+                                                        (3, 'John Doe', 'citizen', 'john123', 'john@example.com'),
+                                                        (4, 'Jane Doe', 'citizen', 'jane123', 'jane@example.com');
 
--- Cidadãos (Alunos)
-INSERT INTO users (name, role) VALUES
-                                   ('John Doe', 'citizen'),
-                                   ('Jane Doe', 'citizen');
+-- Inserir atividades
+INSERT INTO activities (id, name, description, location, professor_id) VALUES
+                                                                           (1, 'Futebol', 'Jogo de futebol entre equipes.', 'Campo A', 1),
+                                                                           (2, 'Vôlei', 'Partida de vôlei amistosa.', 'Quadra B', 2);
 
--- Criação de professores na tabela de herança
--- O ID dos professores na tabela `professors` deve corresponder ao ID dos usuários na tabela `users`
-INSERT INTO professors (id) VALUES
-                                (1), -- Correspondente a 'Prof. Carlos'
-                                (2); -- Correspondente a 'Prof. Maria'
+-- Inserir agendamentos (schedules) para as atividades
+-- Inserir agendamentos (schedules) para as atividades
+INSERT INTO schedules (id, day_of_week, start_time, end_time, activity_id) VALUES
+                                                                               (1, 1, '10:00:00', '12:00:00', 1),  -- Futebol segunda-feira (1 = Monday)
+                                                                               (2, 3, '14:00:00', '16:00:00', 2);  -- Vôlei quarta-feira (3 = Wednesday)
 
--- Criação de cidadãos na tabela de herança
--- O ID dos cidadãos na tabela `citizens` deve corresponder ao ID dos usuários na tabela `users`
-INSERT INTO citizens (id) VALUES
-                              (3), -- Correspondente a 'John Doe'
-                              (4); -- Correspondente a 'Jane Doe'
 
--- Criação de atividades
-INSERT INTO activities (name, description, location, professor_id) VALUES
-('Natação', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et orci sed orci porta condimentum ac eu turpis. Morbi nibh sem, gravida imperdiet massa id, egestas dictum nunc. Nulla vestibulum molestie cursus. Phasellus semper lorem at tellus tincidunt mattis. Integer quis porttitor lorem. Morbi nec mi mattis, egestas diam nec, ullamcorper diam. Morbi vel sapien lectus. Praesent placerat viverra luctus. Aliquam lectus neque, vestibulum non mi eu, efficitur pulvinar urna. Vestibulum eget lectus dignissim, tempus dui sed, gravida enim.', 'Piscina Municipal', 1), -- Professor responsável: Prof. Carlos
-('Futebol', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et orci sed orci porta condimentum ac eu turpis. Morbi nibh sem, gravida imperdiet massa id, egestas dictum nunc. Nulla vestibulum molestie cursus. Phasellus semper lorem at tellus tincidunt mattis. Integer quis porttitor lorem. Morbi nec mi mattis, egestas diam nec, ullamcorper diam. Morbi vel sapien lectus. Praesent placerat viverra luctus. Aliquam lectus neque, vestibulum non mi eu, efficitur pulvinar urna. Vestibulum eget lectus dignissim, tempus dui sed, gravida enim.', 'Campo Municipal', 2);  -- Professor responsável: Prof. Maria
+-- Inserir inscrições de cidadãos em atividades (enrollments)
+INSERT INTO enrollments (id, enrollment_date, activity_id, user_id) VALUES
+                                                                        (1, '2024-09-01', 1, 3),  -- John Doe inscrito no Futebol
+                                                                        (2, '2024-09-02', 2, 4);  -- Jane Doe inscrita no Vôlei
 
--- Criação de horários (schedules) para Natação
-INSERT INTO schedules (day_of_week, start_time, end_time, activity_id) VALUES
-                                                                           (2, '19:00:00', '21:00:00', 1), -- Terça-feira
-                                                                           (4, '19:00:00', '21:00:00', 1); -- Quinta-feira
-
--- Criação de horários (schedules) para Futebol
-INSERT INTO schedules (day_of_week, start_time, end_time, activity_id) VALUES
-                                                                           (1, '18:00:00', '20:00:00', 2), -- Segunda-feira
-                                                                           (3, '18:00:00', '20:00:00', 2); -- Quarta-feira
-
--- Criação de inscrições (enrollments)
--- Agora, as inscrições serão geridas pela tabela de relacionamento `activity_student`
+-- Inserir relacionamento entre atividades e estudantes (citizens)
 INSERT INTO activity_student (activity_id, student_id) VALUES
-                                                           (1, 3), -- John Doe inscrito na Natação
-                                                           (2, 4); -- Jane Doe inscrita no Futebol
+                                                           (1, 3),  -- John Doe inscrito no Futebol
+                                                           (2, 4);  -- Jane Doe inscrita no Vôlei
