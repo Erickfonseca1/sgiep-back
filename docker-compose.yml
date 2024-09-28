@@ -10,12 +10,13 @@ services:
     networks:
       - sgiep-network
     volumes:
-     - ./storage/rabbitmq1:/var/lib/rabbitmq
+      - ./storage/rabbitmq1:/var/lib/rabbitmq
     environment:
-     - RABBITMQ_ERLANG_COOKIE=This_is_my_secret_phrase
-     - RABBITMQ_DEFAULT_USER=mqadmin
-     - RABBITMQ_DEFAULT_PASS=Admin123XX_
-     - CLUSTERED=true
+      - RABBITMQ_ERLANG_COOKIE=This_is_my_secret_phrase
+      - RABBITMQ_DEFAULT_USER=mqadmin
+      - RABBITMQ_DEFAULT_PASS=Admin123XX_
+      - CLUSTERED=true
+    restart: always
 
   redis:
     image: redis:latest
@@ -26,7 +27,6 @@ services:
       - sgiep-network
     volumes:
       - redis_data:/data
-    restart: always
 
 volumes:
   redis_data:

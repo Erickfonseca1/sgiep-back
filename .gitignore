@@ -18,6 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
+/storage/rabbitmq1
+
 
 ### NetBeans ###
 /nbproject/private/
