@@ -4,6 +4,7 @@ import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,14 +15,17 @@ public class AcitivityService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Cacheable(value = "activities", key = "#root.methodName")
     public List<Activity> findAll() {
         return activityRepository.findAll();
     }
 
+    @Cacheable(value = "activities", key = "#id")
     public Activity findById(Long id) {
         Optional<Activity> optionalActivity = activityRepository.findById(id);
         return optionalActivity.orElse(null);
     }
+
 
     public Activity save(Activity activity) {
         return activityRepository.save(activity);
