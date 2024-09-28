@@ -3,6 +3,7 @@ package com.sgiep.sgiep_back.services;
 import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -15,20 +16,24 @@ public class AcitivityService {
     @Autowired
     private ActivityRepository activityRepository;
 
-    @Cacheable(value = "activities", key = "#root.methodName")
+    @Cacheable(value = "activities")
     public List<Activity> findAll() {
         return activityRepository.findAll();
     }
 
-    @Cacheable(value = "activities", key = "#id")
+    @Cacheable(value = "activity", key = "#id")
     public Activity findById(Long id) {
         Optional<Activity> optionalActivity = activityRepository.findById(id);
         return optionalActivity.orElse(null);
     }
 
-
+    @CacheEvict(value = "activities", allEntries = true)
     public Activity save(Activity activity) {
         return activityRepository.save(activity);
     }
 
+    @CacheEvict(value = "activity", key = "#id")
+    public void deleteActivity(Long id) {
+        activityRepository.deleteById(id);
+    }
 }
