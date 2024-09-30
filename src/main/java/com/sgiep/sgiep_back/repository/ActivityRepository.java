@@ -20,11 +20,12 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
     @Query("SELECT a FROM Activity a WHERE a.professor.id = :professorId")
     List<Activity> findByProfessorId(@Param("professorId") Long professorId);
 
-    @Query(
-        "SELECT a FROM Activity a WHERE a.professor.id = :professorId " + 
-        "AND (:name IS NULL OR a.name LIKE %:name%) " + 
-        "AND (:location IS NULL OR a location LIKE %:location%)")
-    List<Activity> findByProfessorIdAndFilters(@Param("professorId") Long professorId, @Param("name") String name, @Param("location") String location);
+    @Query("SELECT a FROM Activity a WHERE a.professor.id = :professorId " +
+       "AND (:name IS NULL OR a.name LIKE %:name%) " +
+       "AND (:location IS NULL OR a.location LIKE %:location%)")
+    List<Activity> findByProfessorIdAndFilters(@Param("professorId") Long professorId, 
+                                           @Param("name") String name, 
+                                           @Param("location") String location);
 
     @Query("SELECT a FROM Activity a JOIN a.students s WHERE s.id = :citizenId")
     List<Activity> findActivitiesByCitizenId(@Param("citizenId") Long citizenId);

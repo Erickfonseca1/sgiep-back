@@ -38,19 +38,19 @@ public class UserController {
         return userService.updateProfessor(professorId, updatedProfessor);
     }
 
-    @GetMapping("/professors")
+    @GetMapping("/api/users/professors")
     public Object getProfessors(
     @RequestParam(required = false) String name,
     @RequestParam(required = false) String email,
-    @RequestParam(required = false) Integer page,      // Parâmetros de paginação opcionais
+    @RequestParam(required = false) Integer page,   // Parâmetros de paginação opcionais
     @RequestParam(required = false) Integer size) {
-        if (page != null && size != null) {
-            Pageable pageable = PageRequest.of(page, size);
-            return userService.findProfessorsByFilters(name, email, pageable);
-        } else {
-            return userService.findProfessorsByFilters(name, email);
-        }
+    if (page != null && size != null) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userService.findProfessorsByFilters(name, email, pageable);
+    } else {
+        return userService.findProfessorsByFilters(name, email);
     }
+}
 
     @GetMapping("/professors")
     public List<User> getProfessors
