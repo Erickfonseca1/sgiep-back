@@ -24,4 +24,9 @@ public class UserController {
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);
     }
+
+    @PutMapping("/{id}/status")
+    public void changeStatus(@PathVariable Long id) {
+        userService.changeStatus(id);
+    }
 }
