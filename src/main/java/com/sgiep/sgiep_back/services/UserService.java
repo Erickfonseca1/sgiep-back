@@ -73,5 +73,9 @@ public class UserService {
 
     public Page<User> findProfessorsByFilters(String name, String email, Pageable pageable) {
         return userRepository.findProfessorsByFilters(name, email, pageable);
+    public void changeStatus(Long id) {
+        User user = findById(id);
+        user.setActive(!user.isActive());
+        userRepository.save(user);
     }
 }

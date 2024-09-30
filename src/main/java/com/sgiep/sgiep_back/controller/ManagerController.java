@@ -1,6 +1,7 @@
 package com.sgiep.sgiep_back.controller;
 
 import com.sgiep.sgiep_back.model.User;
+import com.sgiep.sgiep_back.services.ManagerService;
 import com.sgiep.sgiep_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,18 @@ public class ManagerController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ManagerService managerService;
+
     @GetMapping
     public ResponseEntity<List<User>> getManagers() {
         List<User> managers = userService.getUsersByRole("MANAGER");
+        return ResponseEntity.ok(managers);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<User>> getActiveManagers() {
+        List<User> managers = managerService.getActiveManagers();
         return ResponseEntity.ok(managers);
     }
 }

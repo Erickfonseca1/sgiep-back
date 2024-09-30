@@ -70,4 +70,8 @@ public class UserController {
         return userService.findProfessorsByFilters(name, email, pageable);
     }
 
+    @PutMapping("/{id}/status")
+    public void changeStatus(@PathVariable Long id) {
+        userService.changeStatus(id);
+    }
 }

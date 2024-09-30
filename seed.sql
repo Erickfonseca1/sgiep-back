@@ -1,9 +1,9 @@
 -- Inserir usuários (professores e cidadãos)
 INSERT INTO users (id, name, role, password, email) VALUES
-                                                        (1, 'Prof. Carlos', 'professor', 'professor123', 'carlos@example.com'),
-                                                        (2, 'Prof. Maria', 'professor', 'maria123', 'maria@example.com'),
-                                                        (3, 'John Doe', 'citizen', 'john123', 'john@example.com'),
-                                                        (4, 'Jane Doe', 'citizen', 'jane123', 'jane@example.com');
+                                                        (1, 'Prof. Carlos', 'professor', 'professor123', 'carlos@example.com', false),
+                                                        (2, 'Prof. Maria', 'professor', 'maria123', 'maria@example.com', false),
+                                                        (3, 'John Doe', 'citizen', 'john123', 'john@example.com', active),
+                                                        (4, 'Jane Doe', 'citizen', 'jane123', 'jane@example.com', active);
 
 -- Inserir atividades
 INSERT INTO activities (id, name, description, location, professor_id) VALUES

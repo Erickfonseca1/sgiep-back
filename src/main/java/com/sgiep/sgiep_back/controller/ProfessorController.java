@@ -2,6 +2,7 @@ package com.sgiep.sgiep_back.controller;
 
 import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.model.User;
+import com.sgiep.sgiep_back.services.ProfessorService;
 import com.sgiep.sgiep_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,19 @@ public class ProfessorController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ProfessorService professorService;
+
+
     @GetMapping
     public ResponseEntity<List<User>> getProfessors() {
         List<User> professors = userService.getUsersByRole("PROFESSOR");
+        return ResponseEntity.ok(professors);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<User>> getActiveProfessors() {
+        List<User> professors = professorService.getActiveProfessors();
         return ResponseEntity.ok(professors);
     }
 

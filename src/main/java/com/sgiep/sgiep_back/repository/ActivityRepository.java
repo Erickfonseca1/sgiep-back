@@ -10,7 +10,9 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     Page<Activity> findAll(Pageable pageable);
 

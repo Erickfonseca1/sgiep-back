@@ -24,4 +24,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                        @Param("email") String email, 
                                        Pageable pageable);
 
+    List<User> findByRoleAndActive(String role, Boolean active);
 }
