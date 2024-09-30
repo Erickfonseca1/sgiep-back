@@ -27,9 +27,13 @@ public class ProfessorService {
         return userRepository.findByRole("PROFESSOR");
     }
 
+    public List<User> getActiveProfessors() {
+        return userRepository.findByRoleAndActive("PROFESSOR", true);
+    }
+
     public List<Activity> getActivitiesByProfessor(Long professorId) {
         User professor = findProfessorById(professorId);
-        if (professor != null) {
+        if (professor != null && professor.isActive()) {
             return professor.getActivitiesAsProfessor();
         }
         return null;

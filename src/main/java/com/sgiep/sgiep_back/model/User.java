@@ -18,7 +18,8 @@ public class User implements Serializable {
     private String name;
     private String password;
     private String email;
-    private String role;  // Ex: "PROFESSOR", "ADMIN", "CITIZEN"
+    private String role;  // Ex: "PROFESSOR", "ADMIN", "CITIZEN" AND "MANAGER"
+    private boolean active;
 
     @OneToMany(mappedBy = "professor")
     @JsonIgnoreProperties("professor")
