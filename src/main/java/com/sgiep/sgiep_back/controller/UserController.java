@@ -27,4 +27,18 @@ public class UserController {
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);
     }
+
+    @GetMapping("/filter")
+    public Page<User> getPagedUsers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        // Cria o objeto Pageable com as informações de paginação
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Chama o serviço para buscar os usuários com filtros e paginação
+        return userService.findUsersByFilters(name, email, pageable);
+    }
 }

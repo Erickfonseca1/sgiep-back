@@ -36,6 +36,17 @@ public class UserService {
         return professor;
     }
 
+    public Page<User> findUsersByFilters(String name, String email, Pageable pageable) {
+        // Se name e email forem nulos ou vazios, define como string vazia
+        String searchName = (name == null || name.isEmpty()) ? "" : name;
+        String searchEmail = (email == null || email.isEmpty()) ? "" : email;
+
+        // Chama o repositório para fazer a busca com os filtros
+        return userRepository.findByRoleAndNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                "USER", searchName, searchEmail, pageable);
+    }
+
+
     public List<Activity> getActivitiesByUserId(Long id) {
         User user = findById(id);
         if ("PROFESSOR".equalsIgnoreCase(user.getRole())) {
