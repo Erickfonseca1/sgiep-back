@@ -54,4 +54,21 @@ public class ProfessorController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping
+    public ResponseEntity<User> createProfessor(@RequestBody User professor) {
+        User createdProfessor = professorService.createProfessor(professor);
+        return ResponseEntity.ok(createdProfessor);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateProfessor(@PathVariable Long id, @RequestBody User updatedProfessor) {
+        User professor = professorService.updateProfessor(id, updatedProfessor);
+        return ResponseEntity.ok(professor);
+    }
+
+    @PutMapping("/{id}/status")
+    public void changeProfessorStatus(@PathVariable Long id) {
+        professorService.changeProfessorStatus(id);
+    }
 }

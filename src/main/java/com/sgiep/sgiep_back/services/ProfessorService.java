@@ -17,14 +17,6 @@ public class ProfessorService {
     @Autowired
     private UserRepository userRepository;
 
-    public User findProfessorById(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent() && "PROFESSOR".equalsIgnoreCase(user.get().getRole())) {
-            return user.get();
-        }
-        throw new RuntimeException("Professor not found or user is not a professor");
-    }
-
     public Page<User> findAll(Pageable pageable) {
         return userRepository.findByRole("PROFESSOR", pageable);
     }
@@ -33,11 +25,50 @@ public class ProfessorService {
         return userRepository.findByRoleAndActive("PROFESSOR", true);
     }
 
+    public User findProfessorById(Long id) {
+        User professor = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professor not found"));
+        if (!"PROFESSOR".equalsIgnoreCase(professor.getRole())) {
+            throw new RuntimeException("User is not a professor");
+        }
+        return professor;
+    }
+
     public List<Activity> getActivitiesByProfessor(Long professorId) {
         User professor = findProfessorById(professorId);
         if (professor != null && professor.isActive()) {
             return professor.getActivitiesAsProfessor();
         }
         return null;
+    }
+
+    public void changeProfessorStatus(Long professorId) {
+        User professor = findProfessorById(professorId);
+        professor.setActive(!professor.isActive());
+        userRepository.save(professor);
+    }
+
+    public List<User> findProfessorsByFilters(String name, String email) {
+        return userRepository.findProfessorsByFilters(name, email);
+    }
+
+    public Page<User> findProfessorsByFilters(String name, String email, Pageable pageable) {
+        return userRepository.findProfessorsByFilters(name, email, pageable);
+    }
+
+    public User createProfessor(User professor) {
+        professor.setRole("PROFESSOR");
+        professor.setActive(false);
+        return userRepository.save(professor);
+    }
+
+    public User updateProfessor(Long professorId, User updatedProfessor) {
+        User existingProfessor = userRepository.findById(professorId)
+                .orElseThrow(() -> new RuntimeException("Professor not found"));
+
+        existingProfessor.setName(updatedProfessor.getName());
+        existingProfessor.setEmail(updatedProfessor.getEmail());
+
+        return userRepository.save(existingProfessor);
     }
 }

@@ -12,6 +12,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRole(String role, Pageable pageable);
 
+    List<User> findByRoleAndActive(String role, Boolean active);
+
     @Query("SELECT u FROM User u WHERE u.role = 'PROFESSOR' " +
        "AND (:name IS NULL OR u.name LIKE %:name%) " +
        "AND (:email IS NULL OR u.email LIKE %:email%)")
@@ -23,6 +25,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findProfessorsByFilters(@Param("name") String name, 
                                        @Param("email") String email, 
                                        Pageable pageable);
-
-    List<User> findByRoleAndActive(String role, Boolean active);
 }

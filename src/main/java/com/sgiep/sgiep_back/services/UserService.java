@@ -48,36 +48,4 @@ public class UserService {
 
         throw new RuntimeException("User is not a professor");
     }
-
-    public User createProfessor(User professor) {
-        // Garante que o role do professor seja "PROFESSOR"
-        professor.setRole("PROFESSOR");
-        return userRepository.save(professor);
-    }
-
-    public User updateProfessor(Long professorId, User updatedProfessor) {
-        User existingProfessor = userRepository.findById(professorId)
-            .orElseThrow(() -> new RuntimeException("Professor not found"));
-        
-        // Atualiza os campos relevantes
-        existingProfessor.setName(updatedProfessor.getName());
-        existingProfessor.setEmail(updatedProfessor.getEmail());
-        // Outros campos...
-    
-        return userRepository.save(existingProfessor);
-    }
-
-    public List<User> findProfessorsByFilters(String name, String email) {
-        return userRepository.findProfessorsByFilters(name, email);
-    }
-
-    public Page<User> findProfessorsByFilters(String name, String email, Pageable pageable) {
-        return userRepository.findProfessorsByFilters(name, email, pageable);
-    }
-
-    public void changeStatus(Long id) {
-        User user = findById(id);
-        user.setActive(!user.isActive());
-        userRepository.save(user);
-    }
 }
