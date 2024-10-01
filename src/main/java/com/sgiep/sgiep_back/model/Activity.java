@@ -1,9 +1,7 @@
 package com.sgiep.sgiep_back.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sgiep.sgiep_back.model.Schedule;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
