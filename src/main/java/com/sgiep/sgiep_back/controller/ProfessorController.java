@@ -33,6 +33,17 @@ public class ProfessorController {
         return professorService.findAll(pageable);
     }
 
+    @GetMapping("/filter")
+    public Page<User> getPagedProfessors(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return professorService.findProfessorsByFilters(name, email, pageable);
+    }
+
     @GetMapping("/active")
     public ResponseEntity<List<User>> getActiveProfessors() {
         List<User> professors = professorService.getActiveProfessors();

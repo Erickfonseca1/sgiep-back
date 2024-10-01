@@ -8,8 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class ProfessorService {
@@ -53,9 +55,16 @@ public class ProfessorService {
     }
 
     public Page<User> findProfessorsByFilters(String name, String email, Pageable pageable) {
-        return userRepository.findProfessorsByFilters(name, email, pageable);
-    }
+        // Define os valores padrão para name e email caso sejam nulos
+        String normalizedName = (name == null || name.isEmpty()) ? "" : name;
+        String normalizedEmail = (email == null || email.isEmpty()) ? "" : email;
 
+        System.out.println("normalizedName: " + normalizedName);
+
+        // Chama o método do repositório que utiliza a convenção do Spring Data JPA
+        return userRepository.findByRoleAndNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                "PROFESSOR", normalizedName, normalizedEmail, pageable);
+    }
     public User createProfessor(User professor) {
         professor.setRole("PROFESSOR");
         professor.setActive(false);
@@ -70,5 +79,14 @@ public class ProfessorService {
         existingProfessor.setEmail(updatedProfessor.getEmail());
 
         return userRepository.save(existingProfessor);
+    }
+
+    public static String removeAccents(String str) {
+        if (str == null) {
+            return null;
+        }
+        String normalized = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").toLowerCase();  // também converte para minúsculas
     }
 }

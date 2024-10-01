@@ -14,6 +14,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRoleAndActive(String role, Boolean active);
 
+    Page<User> findByRoleAndNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
+            String role,
+            String name,
+            String email,
+            Pageable pageable);
+
     @Query("SELECT u FROM User u WHERE u.role = 'PROFESSOR' " +
        "AND (:name IS NULL OR u.name LIKE %:name%) " +
        "AND (:email IS NULL OR u.email LIKE %:email%)")
