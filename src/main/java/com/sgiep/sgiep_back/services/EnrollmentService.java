@@ -28,6 +28,7 @@ public class EnrollmentService {
     @Autowired
     private RabbitTemplate rabbitTemplate;  // Injetar o RabbitTemplate para mensageria
 
+    // Listar todas as inscrições
     public List<Enrollment> findAll() {
         return enrollmentRepository.findAll();
     }
@@ -47,6 +48,12 @@ public class EnrollmentService {
             return false; // Já está inscrito
         }
 
+        // Verificar se há vagas disponíveis
+        if (!activity.hasVacancies()) {
+            throw new RuntimeException("No vacancies available for this activity.");
+        }
+
+        // Inscrever o cidadão na atividade
         activity.getStudents().add(citizen);
         activityRepository.save(activity);
 
@@ -57,6 +64,7 @@ public class EnrollmentService {
         return true;
     }
 
+    // Método para cancelar a inscrição
     public boolean cancelEnrollment(Long activityId, Long citizenId) {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new RuntimeException("Activity not found"));

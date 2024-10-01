@@ -9,13 +9,13 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.List;
 
-
 @Setter
 @Getter
 @Entity
 @Table(name = "activities")
 public class Activity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,14 +38,18 @@ public class Activity implements Serializable {
 
     @ManyToMany
     @JoinTable(
-            name = "activity_student",
-            joinColumns = @JoinColumn(name = "activity_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
+        name = "activity_student",
+        joinColumns = @JoinColumn(name = "activity_id"),
+        inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     @JsonIgnoreProperties("activitiesAsStudent")
     private List<User> students;  // Agora é User, e o role será "CITIZEN"
 
-    // Getters and Setters
+    // Novo campo para o limite máximo de vagas
+    private int maxVacancies;  // Limite máximo de vagas
 
-
+    // Método para verificar se há vagas disponíveis
+    public boolean hasVacancies() {
+        return students.size() < maxVacancies;
+    }
 }
