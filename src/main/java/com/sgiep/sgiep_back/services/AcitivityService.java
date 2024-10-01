@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.cache.annotation.Cacheable;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.time.LocalTime;
@@ -35,6 +36,7 @@ public class AcitivityService {
         return activityRepository.save(activity);
     }
 
+    @Cacheable(value = "activities:list", key = "#pageable.pageNumber + '-' + #pageable.pageSize")
     public Page<Activity> findAll(Pageable pageable) {
         return activityRepository.findAll(pageable);
     }
