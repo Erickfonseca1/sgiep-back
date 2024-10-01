@@ -61,10 +61,11 @@ public class ProfessorService {
 
         System.out.println("normalizedName: " + normalizedName);
 
-        // Chama o método do repositório que utiliza a convenção do Spring Data JPA
+        // Chama o metodo do repositório que utiliza a convenção do Spring Data JPA
         return userRepository.findByRoleAndNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
                 "PROFESSOR", normalizedName, normalizedEmail, pageable);
     }
+
     public User createProfessor(User professor) {
         professor.setRole("PROFESSOR");
         professor.setActive(false);
