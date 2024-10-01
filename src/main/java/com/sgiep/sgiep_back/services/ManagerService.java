@@ -3,6 +3,8 @@ package com.sgiep.sgiep_back.services;
 import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class ManagerService {
         throw new RuntimeException("Manager not found or user is not a manager");
     }
 
-    public List<User> getAllManagers() {
-        return userRepository.findByRole("MANAGER");
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findByRole("MANAGER", pageable);
     }
 
     public List<User> getActiveManagers() {

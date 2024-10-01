@@ -24,8 +24,8 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public List<User> getUsersByRole(String role) {
-        return userRepository.findByRole(role);
+    public Page<User> getUsersByRole(String role, Pageable pageable) {
+        return userRepository.findByRole(role, pageable);
     }
 
     public User findProfessorById(Long id) {

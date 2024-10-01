@@ -4,11 +4,11 @@ import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.services.ManagerService;
 import com.sgiep.sgiep_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,16 +17,16 @@ import java.util.List;
 @CrossOrigin(origins = "${cors.allowedOrigins}")
 public class ManagerController {
 
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private ManagerService managerService;
 
-    @GetMapping
-    public ResponseEntity<List<User>> getManagers() {
-        List<User> managers = userService.getUsersByRole("MANAGER");
-        return ResponseEntity.ok(managers);
+    @GetMapping("/paged")
+    public Page<User> getPagedManagers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return managerService.findAll(pageable);
     }
 
     @GetMapping("/active")

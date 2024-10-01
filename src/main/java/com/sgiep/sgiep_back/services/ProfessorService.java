@@ -4,6 +4,8 @@ import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class ProfessorService {
         throw new RuntimeException("Professor not found or user is not a professor");
     }
 
-    public List<User> getAllProfessors() {
-        return userRepository.findByRole("PROFESSOR");
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findByRole("PROFESSOR", pageable);
     }
 
     public List<User> getActiveProfessors() {
