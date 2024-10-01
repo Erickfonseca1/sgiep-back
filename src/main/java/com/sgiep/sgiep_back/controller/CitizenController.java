@@ -31,4 +31,9 @@ public class CitizenController {
     public User getCitizen(@PathVariable Long id) {
         return userService.findById(id);
     }
+
+    @PutMapping("/{id}/status")
+    public void changeCitizenStatus(@PathVariable Long id) {
+        userService.changeUserStatus(id);
+    }
 }

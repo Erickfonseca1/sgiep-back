@@ -49,6 +49,12 @@ public class UserService {
         throw new RuntimeException("User is not a professor");
     }
 
+    public void changeUserStatus(Long id) {
+        User user = findById(id);
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
