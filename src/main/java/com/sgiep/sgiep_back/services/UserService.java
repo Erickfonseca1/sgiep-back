@@ -48,4 +48,8 @@ public class UserService {
 
         throw new RuntimeException("User is not a professor");
     }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }
