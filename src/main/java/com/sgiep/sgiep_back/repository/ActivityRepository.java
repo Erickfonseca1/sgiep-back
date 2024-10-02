@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     Page<Activity> findAll(Pageable pageable);
 
+    @Query("SELECT a FROM Activity a JOIN a.students s WHERE a.id = :activityId")
+    List<Activity> findCitizensByActivity(@Param("activityId") Long activityId);
+
     @Query("SELECT a FROM Activity a JOIN a.schedules s WHERE s.startTime >= :startTime AND s.endTime <= :endTime")
     List<Activity> findActivitiesByTimeRange(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
 
@@ -34,5 +37,4 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     @Query("SELECT a FROM Activity a WHERE a.professor.id = :professorId")
     List<Activity> findActivitiesByProfessorId(@Param("professorId") Long professorId);
-
 }

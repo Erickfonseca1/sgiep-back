@@ -1,5 +1,6 @@
 package com.sgiep.sgiep_back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class User implements Serializable {
     private List<Activity> activitiesAsProfessor;
 
     @ManyToMany(mappedBy = "students")
-    @JsonIgnoreProperties("students")
+    @JsonIgnore
     private List<Activity> activitiesAsStudent;
 
     // Getters and Setters

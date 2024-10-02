@@ -1,5 +1,6 @@
 package com.sgiep.sgiep_back.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -27,8 +28,8 @@ public class Activity implements Serializable {
 
     private String location;
 
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Schedule> schedules;
 
     @ManyToOne
@@ -42,7 +43,7 @@ public class Activity implements Serializable {
         joinColumns = @JoinColumn(name = "activity_id"),
         inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    @JsonIgnoreProperties("activitiesAsStudent")
+    @JsonIgnore
     private List<User> students;  // Agora é User, e o role será "CITIZEN"
 
     // Novo campo para o limite máximo de vagas

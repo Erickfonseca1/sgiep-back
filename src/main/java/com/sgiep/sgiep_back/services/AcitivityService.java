@@ -1,7 +1,10 @@
 package com.sgiep.sgiep_back.services;
 
 import com.sgiep.sgiep_back.model.Activity;
+import com.sgiep.sgiep_back.model.Schedule;
+import com.sgiep.sgiep_back.model.User;
 import com.sgiep.sgiep_back.repository.ActivityRepository;
+import com.sgiep.sgiep_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,9 @@ public class AcitivityService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<Activity> findAll() {
         return activityRepository.findAll();
     }
@@ -31,8 +37,13 @@ public class AcitivityService {
         return optionalActivity.orElse(null);
     }
 
-    @CacheEvict(value = "activities", allEntries = true)
+    @CacheEvict(value = {"activities", "activities:list"}, allEntries = true)
     public Activity save(Activity activity) {
+        if (activity.getSchedules() != null) {
+            for (Schedule schedule : activity.getSchedules()) {
+                schedule.setActivity(activity);
+            }
+        }
         return activityRepository.save(activity);
     }
 
@@ -89,11 +100,13 @@ public class AcitivityService {
             ))
             .collect(Collectors.toList());
     }
-    
 
-
-    @CacheEvict(value = "activity", key = "#id")
+    @CacheEvict(value = {"activities", "activities:list"}, allEntries = true)
     public void deleteActivity(Long id) {
         activityRepository.deleteById(id);
+    }
+
+    public List<Activity> findCitizensByActivity(Long id) {
+        return activityRepository.findCitizensByActivity(id);
     }
 }

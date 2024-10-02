@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Getter
 @Entity
 @Table(name = "schedules")
-public class Schedule {
+public class Schedule implements Serializable {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
@@ -20,7 +21,7 @@ public class Schedule {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
     @JsonBackReference
     private Activity activity;

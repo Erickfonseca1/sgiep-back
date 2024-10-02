@@ -1,9 +1,16 @@
 package com.sgiep.sgiep_back.controller;
 
 import com.sgiep.sgiep_back.model.Activity;
+import com.sgiep.sgiep_back.model.Schedule;
+import com.sgiep.sgiep_back.model.User;
+import com.sgiep.sgiep_back.repository.UserRepository;
 import com.sgiep.sgiep_back.services.AcitivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +28,12 @@ public class ActivityController {
     @Autowired
     public AcitivityService activityService;
 
+    @Autowired
+    public UserRepository userRepository;
+
+    @Autowired
+    private PagedResourcesAssembler<Activity> pagedResourcesAssembler;
+
     @GetMapping
     public List<Activity> getActivities() {
         return activityService.findAll();
@@ -33,8 +46,20 @@ public class ActivityController {
 
     @PostMapping
     public Activity createActivity(@RequestBody Activity activity) {
+        // Verifica se o campo professor contém um id
+        if (activity.getProfessor() != null && activity.getProfessor().getId() != null) {
+            // Busca o professor pelo id e atribui à atividade
+            User professor = userRepository.findById(activity.getProfessor().getId())
+                    .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+            activity.setProfessor(professor);
+
+            System.out.println("Professor: " + professor.getName());
+        }
+
+        // Salva a atividade
         return activityService.save(activity);
     }
+
 
     @PutMapping("/{id}")
     public Activity updateActivity(@PathVariable Long id, @RequestBody Activity updatedActivity) {
@@ -48,9 +73,28 @@ public class ActivityController {
     }
 
     @GetMapping("/paged")
-    public Page<Activity> getPagedActivities(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public PagedModel<EntityModel<Activity>> getPagedActivities(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return activityService.findAll(pageable);
+        Page<Activity> activityPage = activityService.findAll(pageable);
+
+        return pagedResourcesAssembler.toModel(activityPage,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ActivityController.class).getPagedActivities(page, size)).withSelfRel());
+    }
+
+    @GetMapping("/{id}/citizens")
+    public List<Activity> getActivityCitizens(@PathVariable Long id) {
+        return activityService.findCitizensByActivity(id);
+    }
+
+    @GetMapping("/{id}/schedules")
+    public List<Schedule> getActivitySchedules(@PathVariable Long id) {
+        Activity activity = activityService.findById(id);
+        if (activity != null) {
+            System.out.println("Activity schedules: " + activity.getSchedules());
+            return activity.getSchedules();
+        } else {
+            throw new RuntimeException("Activity not found");
+        }
     }
 
     @GetMapping("/filter-by-time")
@@ -95,5 +139,10 @@ public class ActivityController {
     @RequestParam(required = false) LocalDate startDate,
     @RequestParam(required = false) LocalDate endDate) {
         return activityService.filterProfessorAgendaByDate(professorId, startDate, endDate);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteActivity(@PathVariable Long id) {
+        activityService.deleteActivity(id);
     }
 }
