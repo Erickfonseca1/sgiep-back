@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Getter
 @Entity
 @Table(name = "schedules")
-public class Schedule {
+public class Schedule implements Serializable {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)

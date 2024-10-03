@@ -20,9 +20,12 @@ public class EnrollmentController {
         return ResponseEntity.ok(enrollmentService.findAll());
     }
 
-    // Endpoint para inscrever um cidadão em uma atividade
     @PostMapping("/enroll")
     public ResponseEntity<String> enrollStudent(@RequestBody Map<String, Object> requestBody) {
+        if (requestBody == null || !requestBody.containsKey("activityId") || !requestBody.containsKey("citizenId")) {
+            return ResponseEntity.badRequest().body("Dados inválidos: activityId ou citizenId está ausente.");
+        }
+
         Long activityId = ((Number) requestBody.get("activityId")).longValue();
         Long citizenId = ((Number) requestBody.get("citizenId")).longValue();
 

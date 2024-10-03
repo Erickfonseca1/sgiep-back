@@ -28,6 +28,7 @@ public class EnrollmentService {
     @Autowired
     private RabbitTemplate rabbitTemplate;  // Injetar o RabbitTemplate para mensageria
 
+    // Listar todas as inscrições
     public List<Enrollment> findAll() {
         return enrollmentRepository.findAll();
     }
@@ -35,18 +36,24 @@ public class EnrollmentService {
     // Método para inscrever o cidadão na atividade
     public boolean enrollStudent(Long activityId, Long citizenId) {
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found"));
+                .orElseThrow(() -> new RuntimeException("Atividade não encontrada"));
         User citizen = userRepository.findById(citizenId)
-                .orElseThrow(() -> new RuntimeException("Citizen not found"));
+                .orElseThrow(() -> new RuntimeException("Cidadão não encontrado"));
 
         if (!"CITIZEN".equalsIgnoreCase(citizen.getRole())) {
-            throw new RuntimeException("User is not a citizen");
+            throw new RuntimeException("Usuário não é um cidadão");
         }
 
         if (activity.getStudents().contains(citizen)) {
             return false; // Já está inscrito
         }
 
+        // Verificar se há vagas disponíveis
+        if (!activity.hasVacancies()) {
+            throw new RuntimeException("Não há vagas disponíveis");
+        }
+
+        // Inscrever o cidadão na atividade
         activity.getStudents().add(citizen);
         activityRepository.save(activity);
 
@@ -57,6 +64,7 @@ public class EnrollmentService {
         return true;
     }
 
+    // Método para cancelar a inscrição
     public boolean cancelEnrollment(Long activityId, Long citizenId) {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new RuntimeException("Activity not found"));
