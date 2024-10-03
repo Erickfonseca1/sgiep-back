@@ -3,12 +3,15 @@ package com.sgiep.sgiep_back.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 @Setter
 @Getter
@@ -28,9 +31,16 @@ public class Activity implements Serializable {
 
     private String location;
 
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Schedule> schedules;
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules = new ArrayList<>();
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules.clear();
+        if (schedules != null) {
+            this.schedules.addAll(schedules);
+        }
+    }
 
     @ManyToOne
     @JoinColumn(name = "professor_id")

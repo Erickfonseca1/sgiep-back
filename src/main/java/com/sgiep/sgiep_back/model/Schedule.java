@@ -21,7 +21,7 @@ public class Schedule implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "activity_id", nullable = false)
     @JsonBackReference
     private Activity activity;

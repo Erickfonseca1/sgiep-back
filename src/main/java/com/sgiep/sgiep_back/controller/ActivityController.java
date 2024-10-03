@@ -1,5 +1,6 @@
 package com.sgiep.sgiep_back.controller;
 
+import com.sgiep.sgiep_back.dto.ActivityDTO;
 import com.sgiep.sgiep_back.model.Activity;
 import com.sgiep.sgiep_back.model.Schedule;
 import com.sgiep.sgiep_back.model.User;
@@ -11,11 +12,15 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.util.stream.Collectors;
 
 
 import java.util.List;
@@ -45,32 +50,63 @@ public class ActivityController {
     }
 
     @PostMapping
-    public Activity createActivity(@RequestBody Activity activity) {
-        // Verifica se o campo professor contém um id
-        if (activity.getProfessor() != null && activity.getProfessor().getId() != null) {
-            // Busca o professor pelo id e atribui à atividade
-            User professor = userRepository.findById(activity.getProfessor().getId())
+public ResponseEntity<Activity> createActivity(@RequestBody ActivityDTO activityDTO) {
+    try {
+        // Converter DTO para entidade Activity
+        Activity activity = new Activity();
+        activity.setName(activityDTO.getName());
+        activity.setDescription(activityDTO.getDescription());
+        activity.setLocation(activityDTO.getLocation());
+        activity.setMaxVacancies(activityDTO.getMaxVacancies());
+
+        // Associar o professor à atividade, se aplicável
+        if (activityDTO.getProfessorId() != null) {
+            User professor = userRepository.findById(activityDTO.getProfessorId())
                     .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
             activity.setProfessor(professor);
-
-            System.out.println("Professor: " + professor.getName());
         }
 
-        // Salva a atividade
-        return activityService.save(activity);
+        // Converter ScheduleDTO para Schedule e associar à atividade
+        List<Schedule> schedules = activityDTO.getSchedules().stream().map(scheduleDTO -> {
+            Schedule schedule = new Schedule();
+            schedule.setDayOfWeek(DayOfWeek.valueOf(scheduleDTO.getDayOfWeek().toUpperCase()));  // Converter string para DayOfWeek
+            schedule.setStartTime(LocalTime.parse(scheduleDTO.getStartTime()));  // Converter string para LocalTime
+            schedule.setEndTime(LocalTime.parse(scheduleDTO.getEndTime()));      // Converter string para LocalTime
+            schedule.setActivity(activity);  // Associar atividade ao schedule
+            return schedule;
+        }).collect(Collectors.toList());
+
+        activity.setSchedules(schedules);
+
+        Activity createdActivity = activityService.save(activity);
+        return ResponseEntity.ok(createdActivity);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+}
+
 
 
     @PutMapping("/{id}")
-    public Activity updateActivity(@PathVariable Long id, @RequestBody Activity updatedActivity) {
+    public ResponseEntity<Activity> updateActivity(@PathVariable Long id, @RequestBody Activity updatedActivity) {
         Activity existingActivity = activityService.findById(id);
-        if (existingActivity != null) {
-            updatedActivity.setId(id); // Garante que o ID seja o mesmo
-            return activityService.save(updatedActivity);
-        } else {
-        throw new RuntimeException("Activity not found");
+        
+        if (existingActivity == null) {
+            return ResponseEntity.notFound().build();
         }
+
+        existingActivity.setName(updatedActivity.getName());
+        existingActivity.setDescription(updatedActivity.getDescription());
+        existingActivity.setLocation(updatedActivity.getLocation());
+        existingActivity.setMaxVacancies(updatedActivity.getMaxVacancies());
+        existingActivity.setProfessor(updatedActivity.getProfessor());
+        existingActivity.setSchedules(updatedActivity.getSchedules());
+
+        Activity savedActivity = activityService.save(existingActivity);
+        
+        return ResponseEntity.ok(savedActivity);
     }
+
 
     @GetMapping("/paged")
     public PagedModel<EntityModel<Activity>> getPagedActivities(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -90,7 +126,6 @@ public class ActivityController {
     public List<Schedule> getActivitySchedules(@PathVariable Long id) {
         Activity activity = activityService.findById(id);
         if (activity != null) {
-            System.out.println("Activity schedules: " + activity.getSchedules());
             return activity.getSchedules();
         } else {
             throw new RuntimeException("Activity not found");
