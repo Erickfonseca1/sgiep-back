@@ -36,12 +36,12 @@ public class EnrollmentService {
     // Método para inscrever o cidadão na atividade
     public boolean enrollStudent(Long activityId, Long citizenId) {
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Activity not found"));
+                .orElseThrow(() -> new RuntimeException("Atividade não encontrada"));
         User citizen = userRepository.findById(citizenId)
-                .orElseThrow(() -> new RuntimeException("Citizen not found"));
+                .orElseThrow(() -> new RuntimeException("Cidadão não encontrado"));
 
         if (!"CITIZEN".equalsIgnoreCase(citizen.getRole())) {
-            throw new RuntimeException("User is not a citizen");
+            throw new RuntimeException("Usuário não é um cidadão");
         }
 
         if (activity.getStudents().contains(citizen)) {
@@ -50,7 +50,7 @@ public class EnrollmentService {
 
         // Verificar se há vagas disponíveis
         if (!activity.hasVacancies()) {
-            throw new RuntimeException("No vacancies available for this activity.");
+            throw new RuntimeException("Não há vagas disponíveis");
         }
 
         // Inscrever o cidadão na atividade

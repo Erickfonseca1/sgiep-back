@@ -21,6 +21,24 @@ public class User implements Serializable {
     private String email;
     private String role;  // Ex: "PROFESSOR", "ADMIN", "CITIZEN" AND "MANAGER"
     private boolean active;
+    private String phone;
+    private String address;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     @OneToMany(mappedBy = "professor")
     @JsonIgnoreProperties("professor")

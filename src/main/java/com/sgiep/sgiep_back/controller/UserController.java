@@ -28,6 +28,11 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.update(id, user);
+    }
+
     @GetMapping("/filter")
     public Page<User> getPagedUsers(
             @RequestParam(required = false) String name,

@@ -78,6 +78,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User update(Long id, User updatedUser) {
+        return userRepository.findById(id).map(user -> {
+            user.setName(updatedUser.getName());
+            user.setEmail(updatedUser.getEmail());
+            user.setPhone(updatedUser.getPhone());
+            user.setAddress(updatedUser.getAddress());
+            return userRepository.save(user);
+        }).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

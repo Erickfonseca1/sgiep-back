@@ -18,8 +18,8 @@ public class AuthService {
         return authServiceFeignClient.login(request);
     }
 
-    public String register(String name, String email, String password, String role) {
-        RegisterRequestDTO request = new RegisterRequestDTO(name, email, password, role);
+    public String register(String name, String email, String password, String role, String phone, String address) {
+        RegisterRequestDTO request = new RegisterRequestDTO(name, email, password, role, phone, address);
         return authServiceFeignClient.register(request);
     }
 }
