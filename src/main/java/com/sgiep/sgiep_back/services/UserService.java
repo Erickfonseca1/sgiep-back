@@ -20,6 +20,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> getCitizens() {
+        return userRepository.findByRole("CITIZEN");
+    }
+
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -34,6 +38,14 @@ public class UserService {
             throw new RuntimeException("User is not a professor");
         }
         return professor;
+    }
+
+    public User findCitizenById(Long id) {
+        User citizen = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Citizen not found"));
+        if (!"CITIZEN".equalsIgnoreCase(citizen.getRole())) {
+            throw new RuntimeException("User is not a citizen");
+        }
+        return citizen;
     }
 
     public Page<User> findUsersByFilters(String name, String email, Pageable pageable) {

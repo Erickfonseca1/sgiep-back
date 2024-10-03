@@ -82,7 +82,7 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}/citizens")
-    public List<Activity> getActivityCitizens(@PathVariable Long id) {
+    public List<User> getActivityCitizens(@PathVariable Long id) {
         return activityService.findCitizensByActivity(id);
     }
 

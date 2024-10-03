@@ -106,7 +106,7 @@ public class AcitivityService {
         activityRepository.deleteById(id);
     }
 
-    public List<Activity> findCitizensByActivity(Long id) {
+    public List<User> findCitizensByActivity(Long id) {
         return activityRepository.findCitizensByActivity(id);
     }
 }

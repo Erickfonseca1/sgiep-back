@@ -1,6 +1,7 @@
 package com.sgiep.sgiep_back.repository;
 
 import com.sgiep.sgiep_back.model.Activity;
+import com.sgiep.sgiep_back.model.User;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Repository;
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     Page<Activity> findAll(Pageable pageable);
 
-    @Query("SELECT a FROM Activity a JOIN a.students s WHERE a.id = :activityId")
-    List<Activity> findCitizensByActivity(@Param("activityId") Long activityId);
+    @Query("SELECT s FROM Activity a JOIN a.students s WHERE a.id = :activityId")
+    List<User> findCitizensByActivity(@Param("activityId") Long activityId);
 
     @Query("SELECT a FROM Activity a JOIN a.schedules s WHERE s.startTime >= :startTime AND s.endTime <= :endTime")
     List<Activity> findActivitiesByTimeRange(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);

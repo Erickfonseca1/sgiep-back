@@ -12,6 +12,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRole(String role, Pageable pageable);
 
+    List<User> findByRole(String role);
+
     List<User> findByRoleAndActive(String role, Boolean active);
 
     Page<User> findByRoleAndNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
